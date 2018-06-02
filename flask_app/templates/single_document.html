@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <div style="margin-top: 20px">
+        <p class="lead">Enter Words from Document</p>
+        <textarea class="form-control" id=words rows=20 cols=100></textarea>
+        <a href=# id=process_input><button class="btn btn-info btn-block" style="margin-top: 10px">Predict</button></a>
+        <div id=result style="margin-top: 20px">
+            <h3 class="text-center" style="color: teal" id=prediction></h3>
+            <h4 class="text-center" style="color: mediumturquoise" id=confidence></h4>
+        </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type=text/javascript>
+			$(function() {
+			  $('#process_input').bind('click', function() {
+				$.getJSON('/_process_input', {
+				  words: $('#words').val(),
+				}, function(data) {
+				  $("#prediction").text("Prediction: ".concat(data.prediction));
+				  $("#confidence").text("Confidence: ".concat(data.confidence));
+
+				});
+				return false;
+			  });
+			});
+		</script>
+
+
+{% endblock %}
