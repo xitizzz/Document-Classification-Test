@@ -5,7 +5,6 @@
     Python Version: 3.6
 """
 
-
 import os
 from flask import Flask, request, Response, redirect, jsonify, render_template
 from models import FFNPredictor
@@ -28,6 +27,13 @@ def process_input():
     :return: a json object with prediction and confidence
     """
     words = request.args.get('words', 0, type=str)
+    print(str(words).strip())
+    if len(str(words).strip())==0:
+        data = {'prediction': "Empty Document",
+                'confidence': "N.A."}
+        resp = jsonify(data)
+        resp.status_code = 200
+        return resp
     prediction, confidence = predictor.predict(str(words))
     data = {'prediction': prediction,
             'confidence': f"{confidence:.4f}"}
@@ -55,7 +61,7 @@ def handle_get():
     print(accepted_types)
     if 'words' in request.args:
         if not request.args['words']:
-            return Response('Empty document can not be processed', status=400, mimetype='text/plain')
+            return Response('Empty words parameter. Bad Request.', status=400, mimetype='text/plain')
         for accept in accepted_types:
             print(accept)
             if accept in ['text/plain', 'text/html', 'text/csv', '*/*']:
@@ -77,9 +83,10 @@ def handle_get():
                                 f'<prediction>{prediction}</prediction>'
                                 f'<confidence>{confidence:.4f}</confidence>'
                                 f'</response>', status=200, mimetype=accept)
-        return Response("Only the following types are supported. text/plain', 'text/html', 'text/csv, application/json, application/xml",
-                        status=406,
-                        mimetype='text/plain')
+        return Response(
+            "Only the following types are supported. text/plain, text/html, text/csv, application/json, application/xml",
+            status=406,
+            mimetype='text/plain')
     else:
         return redirect('/index')
 

@@ -10,7 +10,7 @@ from time import time
 class FeedForwardNetwork:
     def __init__(self, hidden_layers=[50], dropout=0, activation='softmax', optimizer='adam', metrics=['accuracy'],
                  loss='categorical_crossentropy', epochs=100, batch_size=128, timeit=True, verbosity=1, callbacks=[], class_weight=None, 
-                 validation_split=0.0, validation_data=None, early_stopping=False):
+                 validation_split=0.0, validation_data=None):
         self.hidden_layers = hidden_layers
         self.dropout = dropout
         self.activation = activation
@@ -25,8 +25,6 @@ class FeedForwardNetwork:
         self.class_weight = class_weight
         self.validation_split = validation_split
         self.validation_data = validation_data
-        if early_stopping:
-        	self.callbacks.append(EarlyStopping())
         self.model = Sequential()
 
     def fit(self, X, y):
